@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="CategoryService.Api/CategoryService.Api.csproj" />
+  <Project Path="CategoryService.Application/CategoryService.Application.csproj" />
+  <Project Path="CategoryService.Domain/CategoryService.Domain.csproj" />
+  <Project Path="CategoryService.Infrastructure/CategoryService.Infrastructure.csproj" />
+</Solution>

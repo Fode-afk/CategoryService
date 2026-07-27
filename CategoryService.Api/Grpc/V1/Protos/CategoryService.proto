@@ -1,0 +1,81 @@
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+
+package category.v1;
+
+option csharp_namespace = "CategoryService.Api.Grpc.V1.Protos";
+
+service CategoryService {
+	rpc CreateCategory(CreateCategoryRequest) returns (google.protobuf.Empty);
+
+    rpc UpdateCategoryInfo(UpdateCategoryInfoRequest) returns (google.protobuf.Empty);
+	rpc MoveCategoryTo(MoveCategoryToRequest) returns (google.protobuf.Empty);
+	rpc ReorderCategory(ReorderCategoryRequest) returns (google.protobuf.Empty);
+
+	rpc ActivateCategory(ActivateCategoryRequest) returns (google.protobuf.Empty);
+	rpc DeactivateCategory(DeactivateCategoryRequest) returns (google.protobuf.Empty);
+
+	rpc DeleteCategory(DeleteCategoryRequest) returns (google.protobuf.Empty);
+
+	rpc GetAllCategories(GetAllCategoriesRequest) returns (GetAllCategoriesResponse);
+}
+
+message CreateCategoryRequest {
+	optional string parent_category_id = 1;
+    bool is_active = 2;
+    string name = 3; 
+    string slug = 4;
+	string seo_title = 5;
+    string seo_description = 6;
+    string seo_keywords = 7;
+	string image_url = 8;
+}
+
+message UpdateCategoryInfoRequest {
+	string category_id = 1;
+    string name = 2; 
+    string slug = 3;
+	string seo_title = 4;
+    string seo_description = 5;
+    string seo_keywords = 6;
+	string image_url = 7;
+}
+
+message MoveCategoryToRequest {
+	string category_id = 1;
+	optional string new_parent_category_id = 2;
+}
+
+message ReorderCategoryRequest {
+	string category_id = 1;
+    int32 new_position = 2;
+}
+
+message ActivateCategoryRequest {
+	string category_id = 1;
+}
+
+message DeactivateCategoryRequest {
+	string category_id = 1;
+}
+
+message DeleteCategoryRequest {
+	string category_id = 1;
+}
+
+message CategoryTreeDto {
+	string category_id = 1;
+    string name = 2;
+    string slug = 3;
+    string image = 4;
+	int32 sort_order = 5;
+    repeated CategoryTreeDto childrens = 6;
+}
+
+message GetAllCategoriesRequest { }
+
+message GetAllCategoriesResponse {
+	repeated CategoryTreeDto trees = 1;
+}
