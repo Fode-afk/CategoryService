@@ -40,6 +40,8 @@ public sealed class TracingBehaviour<TRequest, TResponse>(
             activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
             activity?.AddException(ex);
 
+            metrics.RecordHandlerError(handlerName, spanName[..spanName.IndexOf('.')]);
+
             throw;
         }
         finally

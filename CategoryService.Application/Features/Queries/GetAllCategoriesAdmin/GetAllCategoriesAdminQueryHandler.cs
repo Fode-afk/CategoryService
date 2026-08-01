@@ -9,26 +9,25 @@ using migApp.Shared.Results;
 using ZiggyCreatures.Caching.Fusion;
 using static migApp.Shared.Results.ResultFactory;
 
-namespace CategoryService.Application.Features.Queries.GetAllCategories;
+namespace CategoryService.Application.Features.Queries.GetAllCategoriesAdmin;
 
-public sealed class GetAllCategoriesQueryHandler(
+public sealed class GetAllCategoriesAdminQueryHandler(
     IAppDbContext context,
     ICategoryMetrics metrics,
-    IFusionCache cache) : IRequestHandler<GetAllCategoriesQuery, IResult<IReadOnlyList<CategoryTreeDto>>>
+    IFusionCache cache) : IRequestHandler<GetAllCategoriesAdminQuery, IResult<IReadOnlyList<CategoryTreeDto>>>
 {
-    public async Task<IResult<IReadOnlyList<CategoryTreeDto>>> Handle(GetAllCategoriesQuery request, CancellationToken cancellationToken)
+    public async Task<IResult<IReadOnlyList<CategoryTreeDto>>> Handle(GetAllCategoriesAdminQuery request, CancellationToken cancellationToken)
     {
         var wasHit = true;
 
         var tree = await cache.GetOrSetAsync<IReadOnlyList<CategoryTreeDto>?>(
-            CacheKeys.Categories(),
+            CacheKeys.CategoriesAdmin(),
             async (entry, ct) =>
             {
                 wasHit = false;
 
                 var categories = await context.Categories
                     .AsNoTracking()
-                    .Where(x => x.IsActive)
                     .OrderBy(x => x.SortOrder)
                     .Select(x => new CategoryNode(
                         x.Id,
@@ -47,7 +46,7 @@ public sealed class GetAllCategoriesQueryHandler(
             tags: [CacheTags.Categories()],
             token: cancellationToken);
 
-        metrics.RecordCacheHitOrMiss("categories-tree", wasHit);
+        metrics.RecordCacheHitOrMiss("categories-admin-tree", wasHit);
 
         return tree == null ?
             Fail<IReadOnlyList<CategoryTreeDto>>(CategoryErrors.NotFound()) :

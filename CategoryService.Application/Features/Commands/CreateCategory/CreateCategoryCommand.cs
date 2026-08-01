@@ -11,4 +11,4 @@ public sealed record CreateCategoryCommand(
     string SeoTitle, 
     string SeoDescription, 
     string SeoKeywords,
-    string Url) : IRequest<IResult>;
+    string ImageUrl) : IRequest<IResult>;

@@ -1,6 +1,7 @@
 ﻿using CategoryService.Application.Interfaces.Data;
 using CategoryService.Application.Interfaces.Metrics;
 using CategoryService.Domain.Primitives;
+using CategoryService.Infrastructure.BackgroundServices;
 using CategoryService.Infrastructure.Behaviours;
 using CategoryService.Infrastructure.Data;
 using CategoryService.Infrastructure.DependencyInjection;
@@ -14,6 +15,7 @@ using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Microsoft.Extensions.Options;
 using migApp.Shared.Behaviours;
 using migApp.Shared.Caching;
 using migApp.Shared.Grpc;
@@ -32,7 +34,7 @@ public static class InfrastructureExtensions
         this IServiceCollection services,
         IConfiguration configuration) =>
         services
-            .AddServices()
+            .AddServices(configuration)
             .AddDatabase(configuration)
             .AddCache(configuration)
             .AddGrpc()
@@ -42,9 +44,14 @@ public static class InfrastructureExtensions
             .AddObservability(configuration)
             .AddBehaviours();
 
-    private static IServiceCollection AddServices(this IServiceCollection services)
+    private static IServiceCollection AddServices(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddTransient<IDomainEventsDispatcher, DomainEventsDispatcher>();
+
+        services.Configure<SoftDeletedCategoriesCleanupOptions>(
+            configuration.GetSection(SoftDeletedCategoriesCleanupOptions.SectionName));
+        services.AddSingleton(sp => sp.GetRequiredService<IOptions<SoftDeletedCategoriesCleanupOptions>>().Value);
+        services.AddHostedService<SoftDeletedCategoriesCleanupService>();
 
         return services;
     }

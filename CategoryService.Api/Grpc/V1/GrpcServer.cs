@@ -6,6 +6,7 @@ using CategoryService.Application.Features.Commands.DeleteCategory;
 using CategoryService.Application.Features.Commands.MoveCategoryTo;
 using CategoryService.Application.Features.Commands.ReorderCategory;
 using CategoryService.Application.Features.Queries.GetAllCategories;
+using CategoryService.Application.Features.Queries.GetAllCategoriesAdmin;
 using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 using MediatR;
@@ -75,6 +76,24 @@ internal sealed class GrpcServer(IMediator mediator) : Protos.CategoryService.Ca
         return new GetAllCategoriesResponse
         {
             Trees = { result.ThrowIfFailure().Select(t => t.ToGrpc()) }
+        };
+    }
+
+    public override async Task<GetAllCategoriesAdminResponse> GetAllCategoriesAdmin(GetAllCategoriesAdminRequest request, ServerCallContext context)
+    {
+        var result = await mediator.Send(new GetAllCategoriesAdminQuery(), context.CancellationToken);
+        return new GetAllCategoriesAdminResponse
+        {
+            Trees = { result.ThrowIfFailure().Select(t => t.ToGrpc()) }
+        };
+    }
+
+    public override async Task<SearchCategoriesResponse> SearchCategories(SearchCategoriesRequest request, ServerCallContext context)
+    {
+        var result = await mediator.Send(request.ToSearchCategoriesQuery(), context.CancellationToken);
+        return new SearchCategoriesResponse
+        {
+            Categories = { result.ThrowIfFailure().Select(c => c.ToGrpc()) }
         };
     }
 }

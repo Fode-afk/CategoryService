@@ -20,6 +20,9 @@ service CategoryService {
 	rpc DeleteCategory(DeleteCategoryRequest) returns (google.protobuf.Empty);
 
 	rpc GetAllCategories(GetAllCategoriesRequest) returns (GetAllCategoriesResponse);
+	rpc GetAllCategoriesAdmin(GetAllCategoriesAdminRequest) returns (GetAllCategoriesAdminResponse);
+
+	rpc SearchCategories(SearchCategoriesRequest) returns (SearchCategoriesResponse);
 }
 
 message CreateCategoryRequest {
@@ -78,4 +81,28 @@ message GetAllCategoriesRequest { }
 
 message GetAllCategoriesResponse {
 	repeated CategoryTreeDto trees = 1;
+}
+
+message GetAllCategoriesAdminRequest { }
+
+message GetAllCategoriesAdminResponse {
+	repeated CategoryTreeDto trees = 1;
+}
+
+message CategorySearchResultDto {
+	string category_id = 1;
+    string name = 2;
+    string slug = 3;
+    bool is_active = 4;
+    optional string parent_category_id = 5;
+    repeated string breadcrumb_path = 6;
+}
+
+message SearchCategoriesRequest {
+	string query = 1;
+    optional int32 max_results = 2;
+}
+
+message SearchCategoriesResponse {
+	repeated CategorySearchResultDto categories = 1;
 }

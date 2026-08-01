@@ -64,5 +64,7 @@ internal sealed class CategoryConfiguration : IEntityTypeConfiguration<Category>
 
         builder.Property(x => x.Version)
             .IsRequired();
+
+        builder.HasQueryFilter(x => !x.IsDeleted);
     }
 }

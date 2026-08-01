@@ -10,4 +10,4 @@ public sealed record UpdateCategoryInfoCommand(
     string SeoTitle,
     string SeoDescription,
     string SeoKeywords,
-    string Url) : IRequest<IResult>;
+    string ImageUrl) : IRequest<IResult>;

@@ -45,7 +45,7 @@ internal static class CategoryUpdateInfoDataBuilder
                 seoMetadata = seoMetadataResult.Value;
         }
 
-        var imageUrlResult = ImageUrl.Create(request.Url);
+        var imageUrlResult = ImageUrl.Create(request.ImageUrl);
         if (imageUrlResult.IsFailure)
             errors.Add(imageUrlResult.Error);
 

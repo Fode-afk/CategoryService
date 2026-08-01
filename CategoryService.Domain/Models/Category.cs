@@ -48,7 +48,7 @@ public sealed class Category : AggregateRoot
     public DateTimeOffset UpdatedAt { get; private set; }
 
     public DateTimeOffset? DeletedAt { get; private set; }
-    public bool IsDeleted => !DeletedAt.HasValue;
+    public bool IsDeleted => DeletedAt.HasValue;
 
     public static IResult<Category> Create(
         CategoryCreationData data,
