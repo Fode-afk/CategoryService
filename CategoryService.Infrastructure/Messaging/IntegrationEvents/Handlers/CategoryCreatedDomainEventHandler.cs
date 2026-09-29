@@ -11,7 +11,7 @@ public sealed class CategoryCreatedDomainEventHandler(IPublishEndpoint publish) 
         await publish.Publish(new CategoryCreatedIntegrationEvent(
             notification.CategoryId,
             notification.Name,
-            notification.Slug,
+            notification.Slug,          
             notification.IsActive,
             notification.Version), cancellationToken);
 }

@@ -41,7 +41,7 @@ internal sealed class SoftDeletedCategoriesCleanupService(
 
                 var ids = await context.Categories
                     .IgnoreQueryFilters()
-                    .Where(p => p.IsDeleted && p.DeletedAt != null && p.DeletedAt <= cutoff)
+                    .Where(p => p.DeletedAt != null && p.DeletedAt <= cutoff)
                     .OrderBy(p => p.Id)
                     .Select(p => p.Id)
                     .Take(options.BatchSize)
